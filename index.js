@@ -1,6 +1,7 @@
 const firebase = require("firebase");
 const express = require("express");
-const { PerformanceObserver, performance } = require("perf_hooks");
+var bodyParser = require("body-parser");
+const { json } = require("body-parser");
 
 // database config
 var firebaseConfig = {
@@ -28,6 +29,9 @@ var scraps = db.ref("Scrap");
 // server
 const app = express();
 const PORT = process.env.PORT || 9000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.listen(PORT, () => {
   console.log(`Server is listening at port ${PORT}.....`);
@@ -70,4 +74,21 @@ app.get("/scrapOrders", (req, res) => {
 // get scraps
 app.get("/scraps", (req, res) => {
   getJson(scraps).then((resolve) => res.json(resolve));
+});
+
+// check user
+app.post("/checkUser", (req, res) => {
+  const user = {
+    username: req.body.username,
+    password: req.body.password,
+  };
+
+  users
+    .orderByChild("username")
+    .equalTo(user.username)
+    .on("child_added", (snap) => {
+      if (snap.val().password === user.password) res.json({msg:'Successful'});
+      else res.json({msg:'User not found'});
+    });
+  console.log(user);
 });
