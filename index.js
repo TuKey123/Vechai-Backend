@@ -1,5 +1,6 @@
 const firebase = require("firebase");
 const express = require("express");
+const { PerformanceObserver, performance } = require("perf_hooks");
 
 // database config
 var firebaseConfig = {
@@ -32,57 +33,44 @@ app.listen(PORT, () => {
   console.log(`Server is listening at port ${PORT}.....`);
 });
 
+var resolvedFlag = true;
+
+function getJson(colection) {
+  return new Promise((resolve, reject) => {
+    var arr = [];
+
+    colection.on("child_added", (snap) => {
+      const data = snap.val();
+      arr.push(data);
+    });
+
+    setTimeout(() => {
+      resolve(arr);
+    }, 500);
+  });
+}
+
 // get users
 app.get("/users", (req, res) => {
-  var arr = [];
-  users.on("child_added", (snap) => {
-    const data = snap.val();
-    arr.push(data);
-  });
-  if (arr.length > 0) res.json(arr);
+  getJson(users).then((resolve) => res.json(resolve));
 });
 
 // get user type
 app.get("/userTypes", (req, res) => {
-  var arr = [];
-  userTypes
-    .on("child_added", (snap) => {
-      const data = snap.val();
-      arr.push(data);
-      console.log(1);
-    })
-    .then(res.json(arr));
+  getJson(userTypes).then((resolve) => res.json(resolve));
 });
 
 // get orders
 app.get("/orders", (req, res) => {
-  var arr = [];
-  orders
-    .on("child_added", (snap) => {
-      const data = snap.val();
-      arr.push(data);
-    })
-    .then(res.json(arr));
+  getJson(orders).then((resolve) => res.json(resolve));
 });
 
 // get scrap orders
 app.get("/scrapOrders", (req, res) => {
-  var arr = [];
-  scrapOrders
-    .on("child_added", (snap) => {
-      const data = snap.val();
-      arr.push(data);
-    })
-    .then(res.json(arr));
+  getJson(scrapOrders).then((resolve) => res.json(resolve));
 });
 
 // get scraps
 app.get("/scraps", (req, res) => {
-  var arr = [];
-  scraps
-    .on("child_added", (snap) => {
-      const data = snap.val();
-      arr.push(data);
-    })
-    .then(res.json(arr));
+  getJson(scraps).then((resolve) => res.json(resolve));
 });
