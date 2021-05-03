@@ -42,11 +42,8 @@ function getJson(colection) {
     colection.on("child_added", (snap) => {
       const data = snap.val();
       arr.push(data);
-    });
-
-    setTimeout(() => {
       resolve(arr);
-    }, 500);
+    });
   });
 }
 
