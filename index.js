@@ -34,41 +34,50 @@ app.listen(PORT, () => {
 
 // get users
 app.get("/users", (req, res) => {
-  users.on("value", (snap) => {
-      const data = snap.val();
-      res.json(data);
+  var arr = [];
+  users.on("child_added", (snap) => {
+    const data = snap.val();
+    arr.push(data);
   });
+  if (arr.length > 0) res.json(arr);
 });
 
 // get user type
 app.get("/userTypes", (req, res) => {
-  userTypes.on("value", (snap) => {
-      const data = snap.val();
-      res.json(data);
+  var arr = [];
+  userTypes.on("child_added", (snap) => {
+    const data = snap.val();
+    arr.push(data);
   });
+  if (arr.length > 0) res.json(arr);
 });
 
 // get orders
 app.get("/orders", (req, res) => {
-  orders.on("value", (snap) => {
-      const data = snap.val();
-      res.json(data);
+  var arr = [];
+  orders.on("child_added", (snap) => {
+    const data = snap.val();
+    arr.push(data);
   });
+  if (arr.length > 0) res.json(arr);
 });
 
 // get scrap orders
 app.get("/scrapOrders", (req, res) => {
-  scrapOrders.on("value", (snap) => {
-      const data = snap.val();
-      res.json(data);
+  var arr = [];
+  scrapOrders.on("child_added", (snap) => {
+    const data = snap.val();
+    arr.push(data);
   });
+  if (arr.length > 0) res.json(arr);
 });
 
 // get scraps
 app.get("/scraps", (req, res) => {
-    scraps.on("value", (snap) => {
-        const data = snap.val();
-        res.json(data);
-    });
+  var arr = [];
+  scraps.on("child_added", (snap) => {
+    const data = snap.val();
+    arr.push(data);
   });
-  
+  if (arr.length > 0) res.json(arr);
+});
