@@ -37,8 +37,6 @@ app.listen(PORT, () => {
   console.log(`Server is listening at port ${PORT}.....`);
 });
 
-var resolvedFlag = true;
-
 function getJson(colection) {
   return new Promise((resolve, reject) => {
     var arr = [];
@@ -83,12 +81,14 @@ app.post("/checkUser", (req, res) => {
     password: req.body.password,
   };
 
-  users
-    .orderByChild("username")
-    .equalTo(user.username)
-    .on("child_added", (snap) => {
-      if (snap.val().password === user.password) res.json({msg:'Successful'});
-      else res.json({msg:'User not found'});
+  getJson(users).then((resolve) => {
+    var check = false;
+    resolve.forEach(element => {
+      if(element.username === user.username && element.password === user.password)
+        check = true;   
     });
-  console.log(user);
+
+    if(check) res.json({msg:'successful'});
+    else res.json({msg:'user not found'});
+  });
 });
