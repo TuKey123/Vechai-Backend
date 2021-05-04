@@ -80,14 +80,15 @@ app.post("/checkUser", (req, res) => {
     username: req.body.username,
     password: req.body.password,
   };
-
+  
   getJson(users).then((resolve) => {
     var check = false;
-    resolve.every(element => {
-      if(element.username === user.username && element.password === user.password)
+    resolve.forEach(element => {
+      if(element.username === user.username && element.password === user.password){
         check = true;
-        user = element; 
+        user = element;
         return;
+      }
     });
 
     if(check) res.json(user);
