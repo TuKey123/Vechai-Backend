@@ -76,19 +76,21 @@ app.get("/scraps", (req, res) => {
 
 // check user
 app.post("/checkUser", (req, res) => {
-  const user = {
+  var user = {
     username: req.body.username,
     password: req.body.password,
   };
 
   getJson(users).then((resolve) => {
     var check = false;
-    resolve.forEach(element => {
+    resolve.every(element => {
       if(element.username === user.username && element.password === user.password)
-        check = true;   
+        check = true;
+        user = element; 
+        return;
     });
 
-    if(check) res.json({msg:'successful'});
+    if(check) res.json(user);
     else res.json({msg:'user not found'});
   });
 });
