@@ -79,8 +79,13 @@ app.post("/checkUser", (req, res) => {
   var user = {
     username: req.body.username,
     password: req.body.password,
+    address:"",
+    fullname:"",
+    id:"",
+    phone:"",
+    type:""
   };
-  
+
   getJson(users).then((resolve) => {
     var check = false;
     resolve.forEach(element => {
@@ -90,8 +95,20 @@ app.post("/checkUser", (req, res) => {
         return;
       }
     });
-
-    if(check) res.json(user);
-    else res.json({msg:'user not found'});
+    
+    if(check) {
+      var json = {
+        msg:'successfull',
+        user
+      }
+      res.json(json);
+    }
+    else {
+      var json = {
+        msg:'user not found',
+        user
+      }
+      res.json(json);
+    }
   });
 });
