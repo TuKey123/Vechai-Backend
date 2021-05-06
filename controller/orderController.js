@@ -9,32 +9,39 @@ const getOrders = (req, res) => {
   res.json(orders);
 };
 
-const addOrder = (req,res) =>{
+const addOrder = (req, res) => {
   var order = {
-    id:req.body.id,
-    id_buyer:req.body.id_buyer,
-    id_seller:req.body.id_seller,
-    city:req.body.city,
-    location:req.body.location,
-    status:req.body.status,
-    date:req.body.date,
+    id: req.body.id,
+    id_buyer: req.body.id_buyer,
+    id_seller: req.body.id_seller,
+    city: req.body.city,
+    location: req.body.location,
+    status: req.body.status,
+    date: req.body.date,
   };
-  if (firebase.addData('Order',order)){
+  
+  if (firebase.addData("Order", order)) {
+    // add data to array
     orders.push(order);
-    res.json({msg:'successful'});
-  }
-  else res.json({msg:'fail'}); 
- 
-}
+    res.json({ msg: "successful" });
+  } else res.json({ msg: "fail" });
+};
 
-const deleteOrder = (req,res) =>{
+const deleteOrder = (req, res) => {
   var order = {
-    id:req.params.id,
+    id: req.params.id,
   };
 
-  if (firebase.deletaData('Order',order)) res.json({msg:'successful'});
-  else res.json({msg:'fail'}); 
- 
-}
+  if (firebase.deletaData("Order", order)) {
+    //delete data from array
+    for (let index = 0; index < orders.length; index++) {
+      if (orders[index].id === order.id) {
+        orders.pop(index);
+        break;
+      }
+    }
+    res.json({ msg: "successful" });
+  } else res.json({ msg: "fail" });
+};
 
-module.exports = { getOrders,addOrder,deleteOrder };
+module.exports = { getOrders, addOrder, deleteOrder };

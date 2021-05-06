@@ -47,7 +47,7 @@ const checkUser = (req, res) => {
   }
 };
 
-const addUser = (req,res) =>{
+const addUser = (req, res) => {
   var user = {
     username: req.body.username,
     password: req.body.password,
@@ -57,8 +57,9 @@ const addUser = (req,res) =>{
     phone: req.body.phone,
     type: req.body.type,
   };
-  if (firebase.addData('User',user)) res.json({msg:'successful'});
-  else res.json({msg:'fail'}); 
- 
-}
-module.exports = { getUser, checkUser,addUser};
+  if (firebase.addData("User", user)) {
+    users.push(user);
+    res.json({ msg: "successful" });
+  } else res.json({ msg: "fail" });
+};
+module.exports = { getUser, checkUser, addUser };
