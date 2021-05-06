@@ -19,9 +19,22 @@ const addOrder = (req,res) =>{
     status:req.body.status,
     date:req.body.date,
   };
-  if (firebase.addData('Order',order)) res.json({msg:'successful'});
+  if (firebase.addData('Order',order)){
+    orders.push(order);
+    res.json({msg:'successful'});
+  }
   else res.json({msg:'fail'}); 
  
 }
 
-module.exports = { getOrders,addOrder };
+const deleteOrder = (req,res) =>{
+  var order = {
+    id:req.params.id,
+  };
+
+  if (firebase.deletaData('Order',order)) res.json({msg:'successful'});
+  else res.json({msg:'fail'}); 
+ 
+}
+
+module.exports = { getOrders,addOrder,deleteOrder };

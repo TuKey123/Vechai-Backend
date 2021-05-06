@@ -9,4 +9,7 @@ router.get("/orders", orderController.getOrders);
 // add order
 router.post("/addOrder",orderController.addOrder);
 
+// delete order
+router.get("/deleteOrder/:id",orderController.deleteOrder);
+
 module.exports = router;

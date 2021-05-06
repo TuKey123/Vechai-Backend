@@ -41,4 +41,14 @@ function addData(name, data) {
   return true;
 }
 
-module.exports = { db, getData, addData };
+function deletaData(name, data) {
+  try {
+    var table = db.ref(name + "/" + data.id);
+    table.remove();
+  } catch {
+    return false;
+  }
+  return true;
+}
+
+module.exports = { db, getData, deletaData };
