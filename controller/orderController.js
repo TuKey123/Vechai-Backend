@@ -57,7 +57,7 @@ const deleteOrder = (req, res) => {
 const getOrderById = (req, res) => {
   var arr = [];
   var key = "id_buyer";
-  if (req.query.name === "seller") key = "id_seller";
+  if (req.query.role === "seller") key = "id_seller";
 
   orders.forEach((element) => {
     if (element[key] === parseInt(req.query.id)) arr.push(element);
