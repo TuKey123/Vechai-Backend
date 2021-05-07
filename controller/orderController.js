@@ -39,7 +39,7 @@ const addOrder = (req, res) => {
 
 const deleteOrder = (req, res) => {
   var order = {
-    id: req.params.id,
+    id: parseInt(req.params.id)
   };
 
   if (firebase.deletaData("Order", order)) {

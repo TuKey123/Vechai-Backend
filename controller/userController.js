@@ -5,12 +5,24 @@ firebase.getData("User").then((val) => {
   users = [...val];
 });
 
-function getId(){
+function getId() {
   var id = 0;
-  users.forEach(element => {
-    if(element.id > id) id = element.id;
+  users.forEach((element) => {
+    if (element.id > id) id = element.id;
   });
-  return id+1;
+  return id + 1;
+}
+
+function hasUserName(user) {
+  var check = false;
+  users.forEach((element) => {
+    if (element.username === user.username) {
+      check = true;
+      return;
+    }
+  });
+
+  return check;
 }
 
 const getUser = (req, res) => {
@@ -67,7 +79,12 @@ const addUser = (req, res) => {
   };
   // get id
   user.id = getId();
-  
+
+  if (hasUserName(user)) {
+    res.json({ msg: "duplicate user" });
+    return;
+  }
+
   if (firebase.addData("User", user)) {
     users.push(user);
     res.json({ msg: "successful" });
