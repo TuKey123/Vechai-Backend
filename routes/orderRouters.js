@@ -12,4 +12,6 @@ router.post("/addOrder",orderController.addOrder);
 // delete order
 router.get("/deleteOrder/:id",orderController.deleteOrder);
 
+// get order by id
+router.get("/orders/info",orderController.getOrderById);
 module.exports = router;

@@ -33,8 +33,8 @@ async function getData(name) {
 
 function addData(name, data) {
   try {
-    var table = db.ref(name + "/" + data.id);
-    table.set(data);
+    var table = db.ref(name);
+    table.push().set(data);
   } catch {
     return false;
   }

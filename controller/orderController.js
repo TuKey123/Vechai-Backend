@@ -5,12 +5,12 @@ firebase.getData("Order").then((val) => {
   orders = [...val];
 });
 
-function getId(){
+function getId() {
   var id = 0;
-  orders.forEach(element => {
-    if(element.id > id) id = element.id;
+  orders.forEach((element) => {
+    if (element.id > id) id = element.id;
   });
-  return id+1;
+  return id + 1;
 }
 
 const getOrders = (req, res) => {
@@ -19,7 +19,7 @@ const getOrders = (req, res) => {
 
 const addOrder = (req, res) => {
   var order = {
-    id:0,
+    id: 0,
     id_buyer: parseInt(req.body.id_buyer),
     id_seller: parseInt(req.body.id_seller),
     city: req.body.city,
@@ -39,7 +39,7 @@ const addOrder = (req, res) => {
 
 const deleteOrder = (req, res) => {
   var order = {
-    id: parseInt(req.params.id)
+    id: parseInt(req.params.id),
   };
 
   if (firebase.deletaData("Order", order)) {
@@ -54,4 +54,16 @@ const deleteOrder = (req, res) => {
   } else res.json({ msg: "fail" });
 };
 
-module.exports = { getOrders, addOrder, deleteOrder };
+const getOrderById = (req, res) => {
+  var arr = [];
+  var key = "id_buyer";
+  if (req.query.name === "seller") key = "id_seller";
+
+  orders.forEach((element) => {
+    if (element[key] === parseInt(req.query.id)) arr.push(element);
+  });
+  
+  res.json(arr);
+};
+
+module.exports = { getOrders, addOrder, deleteOrder, getOrderById };
