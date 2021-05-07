@@ -5,6 +5,14 @@ firebase.getData("User").then((val) => {
   users = [...val];
 });
 
+function getId(){
+  var id = 0;
+  users.forEach(element => {
+    if(element.id > id) id = element.id;
+  });
+  return id+1;
+}
+
 const getUser = (req, res) => {
   res.json(users);
 };
@@ -15,9 +23,9 @@ const checkUser = (req, res) => {
     password: req.body.password,
     address: "",
     fullname: "",
-    id: "",
+    id: 0,
     phone: "",
-    type: "",
+    type: 0,
   };
 
   var check = false;
@@ -53,13 +61,17 @@ const addUser = (req, res) => {
     password: req.body.password,
     address: req.body.address,
     fullname: req.body.fullname,
-    id: req.body.id,
+    id: 0,
     phone: req.body.phone,
-    type: req.body.type,
+    type: parseInt(req.body.type),
   };
+  // get id
+  user.id = getId();
+  
   if (firebase.addData("User", user)) {
     users.push(user);
     res.json({ msg: "successful" });
   } else res.json({ msg: "fail" });
 };
+
 module.exports = { getUser, checkUser, addUser };

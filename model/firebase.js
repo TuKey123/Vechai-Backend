@@ -51,4 +51,4 @@ function deletaData(name, data) {
   return true;
 }
 
-module.exports = { db, getData, deletaData };
+module.exports = { db, getData, addData,deletaData };
