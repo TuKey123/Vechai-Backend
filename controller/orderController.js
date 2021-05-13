@@ -62,8 +62,26 @@ const getOrderById = (req, res) => {
   orders.forEach((element) => {
     if (element[key] === parseInt(req.query.id)) arr.push(element);
   });
-  
+
   res.json(arr);
 };
 
-module.exports = { getOrders, addOrder, deleteOrder, getOrderById };
+const changeOrderStatus = (req, res) => {
+  var id_order = parseInt(req.query.id);
+  var id_buyer = parseInt(req.query.id_buyer);
+
+  var order = {};
+  orders.forEach((element) => {
+    if (element.id === id_order) {
+      element.id_buyer = id_buyer;
+      element.status = "confirm";
+      order = element;
+      return;
+    }
+  });
+  if (firebase.updateOrder(order)) {
+    res.json({ msg: "successful" });
+  } else res.json({ msg: "fail" });
+
+};
+module.exports = { getOrders, addOrder, deleteOrder, getOrderById,changeOrderStatus };

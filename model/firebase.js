@@ -41,14 +41,35 @@ function addData(name, data) {
   return true;
 }
 
-function deletaData(name, data) {
+function updateOrder(order){
   try {
-    var table = db.ref(name + "/" + data.id);
-    table.remove();
+    var table = db.ref('Order');
+    table.on("child_added", (snap) => {
+      if(snap.val().id===order.id){
+        key = snap.key;
+      }
+    });
+    db.ref('Order/'+key).set(order);
   } catch {
     return false;
   }
   return true;
 }
 
-module.exports = { db, getData, addData,deletaData };
+function deletaData(name, data) {
+  try {
+    var table = db.ref(name);
+    var key;
+    table.on("child_added", (snap) => {
+      if(snap.val().id===data.id){
+        key = snap.key;
+      }
+    });
+    db.ref(name+'/'+key).remove();
+  } catch {
+    return false;
+  }
+  return true;
+}
+
+module.exports = { db, getData, addData,deletaData ,updateOrder};
