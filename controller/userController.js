@@ -5,7 +5,7 @@ var userInstance  = new User();
 
 function getId() {
   var id = 0;
-  userInstance.forEach((element) => {
+  userInstance.users.forEach((element) => {
     if (element.id > id) id = element.id;
   });
   return id + 1;
@@ -13,7 +13,7 @@ function getId() {
 
 function hasUserName(user) {
   var check = false;
-  userInstance.forEach((element) => {
+  userInstance.users.forEach((element) => {
     if (element.username === user.username) {
       check = true;
       return;
@@ -24,7 +24,7 @@ function hasUserName(user) {
 }
 
 const getUser = (req, res) => {
-  res.json(userInstance);
+  res.json(userInstance.users);
 };
 
 const checkUser = (req, res) => {
@@ -39,7 +39,7 @@ const checkUser = (req, res) => {
   };
 
   var check = false;
-  userInstance.forEach((element) => {
+  userInstance.users.forEach((element) => {
     if (
       element.username === user.username &&
       element.password === user.password
@@ -84,7 +84,7 @@ const addUser = (req, res) => {
   }
 
   if (firebase.addData("User", user)) {
-    userInstance.push(user);
+    userInstance.users.push(user);
     res.json({ msg: "successful" });
   } else res.json({ msg: "fail" });
 };

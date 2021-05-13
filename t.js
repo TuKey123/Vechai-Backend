@@ -11,7 +11,11 @@ class Order {
     }
   }
 }
-
+class test{
+  constructor(){
+    this.w = 1;
+  }
+}
 var order = new Order();
 console.log(order.number);
 var s = order.number;
@@ -20,4 +24,7 @@ setTimeout(() => {
     s.push(6);
   console.log(order.number);
 }, 1000);
+
+var t = new test();
+t.w = 2;
 
