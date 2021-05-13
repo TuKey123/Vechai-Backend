@@ -16,6 +16,6 @@ router.get("/deleteOrder/:id",orderController.deleteOrder);
 router.get("/orders/info",orderController.getOrderById);
 
 // change status
-router.get("/orders/confirm",orderController.changeOrderStatus);
+router.put("/orders/confirm",orderController.changeOrderStatus);
 
 module.exports = router;
