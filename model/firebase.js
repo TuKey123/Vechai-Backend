@@ -15,7 +15,6 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 var db = firebase.database();
-
 async function getData(name) {
   var table = db.ref(name);
   var arr = [];
@@ -71,5 +70,6 @@ function deletaData(name, data) {
   }
   return true;
 }
+
 
 module.exports = { db, getData, addData,deletaData ,updateOrder};

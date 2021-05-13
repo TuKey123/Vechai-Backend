@@ -1,21 +1,20 @@
 const firebase = require("../model/firebase");
 const Order = require('../model/order');
+const User = require('../model/user');
 
-var orders = [];
-firebase.getData("Order").then((val) => {
-  orders = [...val];
-});
+var orderInstance = new Order();
+var userInstance  = new User();
 
 function getId() {
   var id = 0;
-  orders.forEach((element) => {
+  orderInstance.orders.forEach((element) => {
     if (element.id > id) id = element.id;
   });
   return id + 1;
 }
 
 const getOrders = (req, res) => {
-  res.json(orders);
+  res.json(orderInstance.orders);
 };
 
 const addOrder = (req, res) => {
@@ -33,7 +32,7 @@ const addOrder = (req, res) => {
 
   if (firebase.addData("Order", order)) {
     // add data to array
-    orders.push(order);
+    orderInstance.orders.push(order);
     res.json({ msg: "successful" });
   } else res.json({ msg: "fail" });
 };
@@ -45,9 +44,9 @@ const deleteOrder = (req, res) => {
 
   if (firebase.deletaData("Order", order)) {
     //delete data from array
-    for (let index = 0; index < orders.length; index++) {
-      if (orders[index].id === order.id) {
-        orders.pop(index);
+    for (let index = 0; index < orderInstance.orders.length; index++) {
+      if (orderInstance.orders[index].id === order.id) {
+        orderInstance.orders.pop(index);
         break;
       }
     }
@@ -60,12 +59,7 @@ const getOrderById = async (req, res) => {
   var key = "id_buyer";
   if (req.query.role === "seller") key = "id_seller";
 
-  var users = [];
-  await firebase.getData("User").then((val) => {
-    users = [...val];
-  });
-
-  orders.forEach((element) => {
+  orderInstance.orders.forEach((element) => {
     if (element[key] === parseInt(req.query.id)) {
       var object = {
         id: element.id,
@@ -80,8 +74,7 @@ const getOrderById = async (req, res) => {
           id: element.id_seller,
         },
       };
-      users.forEach(element => {
-        console.log(element);
+      userInstance.users.forEach(element => {
         if (element.id === object.buyer.id){
           object.buyer.phone = element.phone;
           object.buyer.fullname = element.fullname;
@@ -103,7 +96,7 @@ const changeOrderStatus = (req, res) => {
   var id_buyer = parseInt(req.query.id_buyer);
 
   var order = {};
-  orders.forEach((element) => {
+  orderInstance.orders.forEach((element) => {
     if (element.id === id_order) {
       element.id_buyer = id_buyer;
       element.status = "confirm";

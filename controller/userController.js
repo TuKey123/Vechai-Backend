@@ -1,13 +1,11 @@
 const firebase = require("../model/firebase");
+const User = require('../model/user');
 
-var users = [];
-firebase.getData("User").then((val) => {
-  users = [...val];
-});
+var userInstance  = new User();
 
 function getId() {
   var id = 0;
-  users.forEach((element) => {
+  userInstance.forEach((element) => {
     if (element.id > id) id = element.id;
   });
   return id + 1;
@@ -15,7 +13,7 @@ function getId() {
 
 function hasUserName(user) {
   var check = false;
-  users.forEach((element) => {
+  userInstance.forEach((element) => {
     if (element.username === user.username) {
       check = true;
       return;
@@ -26,7 +24,7 @@ function hasUserName(user) {
 }
 
 const getUser = (req, res) => {
-  res.json(users);
+  res.json(userInstance);
 };
 
 const checkUser = (req, res) => {
@@ -41,7 +39,7 @@ const checkUser = (req, res) => {
   };
 
   var check = false;
-  users.forEach((element) => {
+  userInstance.forEach((element) => {
     if (
       element.username === user.username &&
       element.password === user.password
@@ -86,7 +84,7 @@ const addUser = (req, res) => {
   }
 
   if (firebase.addData("User", user)) {
-    users.push(user);
+    userInstance.push(user);
     res.json({ msg: "successful" });
   } else res.json({ msg: "fail" });
 };
