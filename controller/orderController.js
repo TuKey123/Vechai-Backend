@@ -20,7 +20,7 @@ const getOrders = (req, res) => {
 const addOrder = (req, res) => {
   var order = {
     id: 0,
-    id_buyer: parseInt(req.body.id_buyer),
+    id_buyer: 0,
     id_seller: parseInt(req.body.id_seller),
     city: req.body.city,
     location: req.body.location,
