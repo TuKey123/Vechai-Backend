@@ -15,7 +15,13 @@ router.get("/deleteOrder/:id",orderController.deleteOrder);
 // get order by id
 router.get("/orders/info",orderController.getOrderById);
 
-// change status
-router.put("/orders/confirm",orderController.changeOrderStatus);
+// get order by status
+router.get("/orders/status",orderController.getOrderByStatus);
+
+// confirm status
+router.put("/orders/confirm",orderController.confirm);
+
+// complete status
+router.put("/orders/complete",orderController.complete);
 
 module.exports = router;

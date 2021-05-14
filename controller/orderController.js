@@ -91,7 +91,42 @@ const getOrderById = async (req, res) => {
   res.json(arr);
 };
 
-const changeOrderStatus = (req, res) => {
+const getOrderByStatus = async (req, res) => {
+  var arr = [];
+  const status = req.query.type;
+  orderInstance.orders.forEach((element) => {
+    if (element.status === status) {
+      var object = {
+        id: element.id,
+        location: element.location,
+        date: element.date,
+        city: element.city,
+        status: element.status,
+        buyer: {
+          id: element.id_buyer,
+        },
+        seller: {
+          id: element.id_seller,
+        },
+      };
+      userInstance.users.forEach(element => {
+        if (element.id === object.buyer.id){
+          object.buyer.phone = element.phone;
+          object.buyer.fullname = element.fullname;
+        }
+        if (element.id === object.seller.id){
+          object.seller.phone = element.phone;
+          object.seller.fullname = element.fullname;
+        }
+      });
+      arr.push(object);
+    }
+  });
+
+  res.json(arr);
+};
+
+const confirm = (req, res) => {
   var id_order = parseInt(req.query.id);
   var id_buyer = parseInt(req.query.id_buyer);
 
@@ -108,10 +143,30 @@ const changeOrderStatus = (req, res) => {
     res.json({ msg: "successful" });
   } else res.json({ msg: "fail" });
 };
+
+const complete = (req, res) => {
+  var id_order = parseInt(req.query.id);
+
+  var order = {};
+  orderInstance.orders.forEach((element) => {
+    if (element.id === id_order) {
+      element.status = "complete";
+      order = element;
+      return;
+    }
+  });
+  if (firebase.updateOrder(order)) {
+    res.json({ msg: "successful" });
+  } else res.json({ msg: "fail" });
+};
+
+
 module.exports = {
   getOrders,
   addOrder,
   deleteOrder,
   getOrderById,
-  changeOrderStatus,
+  getOrderByStatus,
+  confirm,
+  complete
 };
