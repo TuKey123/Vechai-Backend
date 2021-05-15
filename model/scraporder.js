@@ -1,19 +1,19 @@
 const firebase = require('./firebase');
 
 var instance ;
-class Order{
+class ScrapOrder{
     constructor(){
         if(instance==undefined){
             instance = this;
-            this.orders = [];
+            this.scrapOrders = [];
             this.getData();            
         }
         return instance;
     }
-
+    
     getData(){
-        firebase.getOrderDetail().then(val =>this.orders=[...val]);
+        firebase.getData('Scrap_Order').then(val =>this.scrapOrders=[...val]);
     }
 }
 
-module.exports = Order;
+module.exports = ScrapOrder;

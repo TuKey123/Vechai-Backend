@@ -22,10 +22,12 @@ const addOrder = (req, res) => {
     id: 0,
     id_buyer: 0,
     id_seller: parseInt(req.body.id_seller),
-    city: req.body.city,
     location: req.body.location,
     status: req.body.status,
     date: req.body.date,
+    note:req.body.note,
+    total_price:0,
+    total_weight:0
   };
   // get id
   order.id = getId();
@@ -46,7 +48,7 @@ const deleteOrder = (req, res) => {
     //delete data from array
     for (let index = 0; index < orderInstance.orders.length; index++) {
       if (orderInstance.orders[index].id === order.id) {
-        orderInstance.orders.pop(index);
+        orderInstance.orders.splice(index,1);
         break;
       }
     }
@@ -67,6 +69,9 @@ const getOrderById = async (req, res) => {
         date: element.date,
         city: element.city,
         status: element.status,
+        note:element.note,
+        total_price:element.total_price,
+        total_weight:element.total_weight,
         buyer: {
           id: element.id_buyer,
         },
@@ -102,6 +107,9 @@ const getOrderByStatus = async (req, res) => {
         date: element.date,
         city: element.city,
         status: element.status,
+        node:element.note,
+        total_price:element.total_price,
+        total_weight:element.total_weight,
         buyer: {
           id: element.id_buyer,
         },

@@ -30,6 +30,31 @@ async function getData(name) {
   return arr;
 }
 
+async function getOrderDetail() {
+  var order = db.ref('Order');
+  var scrapOrder = db.ref('Scrap_Order');
+  var arr = [];
+
+  await new Promise((resolve, reject) => {
+    order.on("child_added", snap => {
+      var orderRow = snap.val();
+      orderRow.total_weight = 0;
+      orderRow.total_price = 0;
+      scrapOrder.on("child_added",snap=>{
+        var sOrderRow = snap.val();
+        if(sOrderRow.id_order===orderRow.id){
+          orderRow.total_weight += sOrderRow.weight;
+          orderRow.total_price += sOrderRow.total;
+        }
+      })
+      arr.push(orderRow);
+      resolve(arr);
+    });
+  });
+
+  return arr;
+}
+
 function addData(name, data) {
   try {
     var table = db.ref(name);
@@ -72,4 +97,4 @@ function deletaData(name, data) {
 }
 
 
-module.exports = { db, getData, addData,deletaData ,updateOrder};
+module.exports = { db, getData, addData,deletaData ,updateOrder, getOrderDetail};

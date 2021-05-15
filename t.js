@@ -11,20 +11,23 @@ class Order {
     }
   }
 }
-class test{
-  constructor(){
+class test {
+  constructor() {
     this.w = 1;
   }
 }
-var order = new Order();
-console.log(order.number);
-var s = order.number;
+// var order = new Order();
+// console.log(order.number);
+// var s = order.number;
 
-setTimeout(() => {
-    s.push(6);
-  console.log(order.number);
-}, 1000);
+// setTimeout(() => {
+//     s.push(6);
+//   console.log(order.number);
+// }, 1000);
 
-var t = new test();
-t.w = 2;
+// var t = new test();
+// t.w = 2;
 
+var arr = [1, 2, 3];
+arr.splice(1,1);
+console.log(arr);
