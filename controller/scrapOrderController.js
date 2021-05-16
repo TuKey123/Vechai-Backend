@@ -19,7 +19,11 @@ const getScrapOders = (req, res) => {
 
 const getScrapOdersById = (req, res) => {
   const id_order = parseInt(req.query.id);
-  res.json(sOrderInstance.scrapOrders.filter(element=>element.id_order === id_order));
+  res.json(
+    sOrderInstance.scrapOrders.filter(
+      (element) => element.id_order === id_order
+    )
+  );
 };
 
 const addScrapOrder = (req, res) => {
@@ -30,14 +34,25 @@ const addScrapOrder = (req, res) => {
     total: parseInt(req.body.total),
     weight: parseInt(req.body.weight),
   };
+
   // get id
   scrapOrder.id = getId();
 
-  if (firebase.addData("Scrap_Order", scrapOrder)) {
-    console.log(orderInstance.orders);
-    sOrderInstance.scrapOrders.push(scrapOrder);
-    res.json({ msg: "successful" });
-  } else res.json({ msg: "fail" });
+  try {
+    if (firebase.addData("Scrap_Order", scrapOrder)) {
+      sOrderInstance.scrapOrders.push(scrapOrder);
+      orderInstance.orders.forEach((element) => {
+        if (element.id === scrapOrder.id_order) {
+          element.total_price += scrapOrder.total;
+          element.total_weight += scrapOrder.weight;
+          return;
+        }
+      });
+      res.json({ msg: "successful" });
+    } else res.json({ msg: "fail" });
+  } catch (error) {
+    res.json({ msg: "fail" });
+  }
 };
 
-module.exports = { getScrapOders, addScrapOrder, getScrapOdersById};
+module.exports = { getScrapOders, addScrapOrder, getScrapOdersById };

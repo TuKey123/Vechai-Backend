@@ -1,9 +1,11 @@
 const firebase = require("../model/firebase");
-const Order = require('../model/order');
-const User = require('../model/user');
+const Order = require("../model/order");
+const ScrapOrder = require("../model/scraporder");
+const User = require("../model/user");
 
 var orderInstance = new Order();
-var userInstance  = new User();
+var sOrderInstance = new ScrapOrder();
+var userInstance = new User();
 
 function getId() {
   var id = 0;
@@ -25,18 +27,22 @@ const addOrder = (req, res) => {
     location: req.body.location,
     status: req.body.status,
     date: req.body.date,
-    note:req.body.note,
-    total_price:0,
-    total_weight:0
+    note: req.body.note,
   };
   // get id
   order.id = getId();
 
-  if (firebase.addData("Order", order)) {
-    // add data to array
-    orderInstance.orders.push(order);
-    res.json({ msg: "successful" });
-  } else res.json({ msg: "fail" });
+  try {
+    if (firebase.addData("Order", order)) {
+      // add data to array
+      order.total_price = 0;
+      order.total_weight = 0;
+      orderInstance.orders.push(order);
+      res.json({ msg: "successful" });
+    } else res.json({ msg: "fail" });
+  } catch (error) {
+    res.json({ msg: "fail" });
+  }
 };
 
 const deleteOrder = (req, res) => {
@@ -44,16 +50,25 @@ const deleteOrder = (req, res) => {
     id: parseInt(req.params.id),
   };
 
-  if (firebase.deletaData("Order", order)) {
-    //delete data from array
-    for (let index = 0; index < orderInstance.orders.length; index++) {
-      if (orderInstance.orders[index].id === order.id) {
-        orderInstance.orders.splice(index,1);
-        break;
-      }
-    }
-    res.json({ msg: "successful" });
-  } else res.json({ msg: "fail" });
+  try {
+    if (firebase.deletaData("Order", order)) {
+      //delete data from array
+      orderInstance.orders.forEach((element, index) => {
+        if (element.id === order.id) {
+          orderInstance.orders.splice(index, 1);
+          return;
+        }
+      });
+
+      //delete scrap order
+      firebase.deleteScrapOrder(order);
+      sOrderInstance.scrapOrders = sOrderInstance.scrapOrders.filter(val=> val.id_order !== order.id);
+      
+      res.json({ msg: "successful" });
+    } else res.json({ msg: "fail" });
+  } catch (error) {
+    res.json({ msg: "fail" });
+  }
 };
 
 const getOrderById = async (req, res) => {
@@ -69,9 +84,9 @@ const getOrderById = async (req, res) => {
         date: element.date,
         city: element.city,
         status: element.status,
-        note:element.note,
-        total_price:element.total_price,
-        total_weight:element.total_weight,
+        note: element.note,
+        total_price: element.total_price,
+        total_weight: element.total_weight,
         buyer: {
           id: element.id_buyer,
         },
@@ -79,12 +94,12 @@ const getOrderById = async (req, res) => {
           id: element.id_seller,
         },
       };
-      userInstance.users.forEach(element => {
-        if (element.id === object.buyer.id){
+      userInstance.users.forEach((element) => {
+        if (element.id === object.buyer.id) {
           object.buyer.phone = element.phone;
           object.buyer.fullname = element.fullname;
         }
-        if (element.id === object.seller.id){
+        if (element.id === object.seller.id) {
           object.seller.phone = element.phone;
           object.seller.fullname = element.fullname;
         }
@@ -107,9 +122,9 @@ const getOrderByStatus = async (req, res) => {
         date: element.date,
         city: element.city,
         status: element.status,
-        node:element.note,
-        total_price:element.total_price,
-        total_weight:element.total_weight,
+        node: element.note,
+        total_price: element.total_price,
+        total_weight: element.total_weight,
         buyer: {
           id: element.id_buyer,
         },
@@ -117,12 +132,12 @@ const getOrderByStatus = async (req, res) => {
           id: element.id_seller,
         },
       };
-      userInstance.users.forEach(element => {
-        if (element.id === object.buyer.id){
+      userInstance.users.forEach((element) => {
+        if (element.id === object.buyer.id) {
           object.buyer.phone = element.phone;
           object.buyer.fullname = element.fullname;
         }
-        if (element.id === object.seller.id){
+        if (element.id === object.seller.id) {
           object.seller.phone = element.phone;
           object.seller.fullname = element.fullname;
         }
@@ -147,9 +162,13 @@ const confirm = (req, res) => {
       return;
     }
   });
-  if (firebase.updateOrder(order)) {
-    res.json({ msg: "successful" });
-  } else res.json({ msg: "fail" });
+
+  try {
+    if (firebase.updateOrder(order)) res.json({ msg: "successful" });
+    else res.json({ msg: "fail" });
+  } catch (error) {
+    res.json({ msg: "fail" });
+  }
 };
 
 const complete = (req, res) => {
@@ -163,11 +182,14 @@ const complete = (req, res) => {
       return;
     }
   });
-  if (firebase.updateOrder(order)) {
-    res.json({ msg: "successful" });
-  } else res.json({ msg: "fail" });
-};
 
+  try {
+    if (firebase.updateOrder(order)) res.json({ msg: "successful" });
+    else res.json({ msg: "fail" });
+  } catch (error) {
+    res.json({ msg: "fail" });
+  }
+};
 
 module.exports = {
   getOrders,
@@ -176,5 +198,5 @@ module.exports = {
   getOrderById,
   getOrderByStatus,
   confirm,
-  complete
+  complete,
 };

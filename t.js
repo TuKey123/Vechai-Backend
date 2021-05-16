@@ -28,6 +28,8 @@ class test {
 // var t = new test();
 // t.w = 2;
 
-var arr = [1, 2, 3];
-arr.splice(1,1);
-console.log(arr);
+var arr = ["1","2", "3"];
+// arr = arr.filter(val=>val<3)
+
+console.log(arr.pop("2"));
+

@@ -15,6 +15,8 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 var db = firebase.database();
+
+// Get 
 async function getData(name) {
   var table = db.ref(name);
   var arr = [];
@@ -40,13 +42,11 @@ async function getOrderDetail() {
       var orderRow = snap.val();
       orderRow.total_weight = 0;
       orderRow.total_price = 0;
-      scrapOrder.on("child_added",snap=>{
+      scrapOrder.orderByChild('id_order').equalTo(orderRow.id).once('child_added',snap=>{
         var sOrderRow = snap.val();
-        if(sOrderRow.id_order===orderRow.id){
-          orderRow.total_weight += sOrderRow.weight;
-          orderRow.total_price += sOrderRow.total;
-        }
-      })
+        orderRow.total_weight += sOrderRow.weight;
+        orderRow.total_price += sOrderRow.total;
+      });
       arr.push(orderRow);
       resolve(arr);
     });
@@ -55,6 +55,7 @@ async function getOrderDetail() {
   return arr;
 }
 
+// Add 
 function addData(name, data) {
   try {
     var table = db.ref(name);
@@ -65,6 +66,7 @@ function addData(name, data) {
   return true;
 }
 
+// Update
 function updateOrder(order){
   try {
     var table = db.ref('Order');
@@ -79,6 +81,8 @@ function updateOrder(order){
   }
   return true;
 }
+
+// Delete
 
 function deletaData(name, data) {
   try {
@@ -96,5 +100,23 @@ function deletaData(name, data) {
   return true;
 }
 
+function deleteScrapOrder(order) {
+  try {
+    var table = db.ref('Scrap_Order');
+    var key;
+    table.on("child_added", (snap) => {
+      if(snap.val().id_order===order.id){
+        key = snap.key;
+        db.ref('Scrap_Order/'+key).remove();
+      }
+    });
 
-module.exports = { db, getData, addData,deletaData ,updateOrder, getOrderDetail};
+  } catch {
+    return false;
+  }
+  return true;
+}
+
+
+
+module.exports = { db, getData, addData,deletaData ,updateOrder, getOrderDetail, deleteScrapOrder};
