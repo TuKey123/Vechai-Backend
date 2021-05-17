@@ -32,7 +32,7 @@ const addScrapOrder = (req, res) => {
     id_order: parseInt(req.body.id_order),
     id_scrap: parseInt(req.body.id_scrap),
     total: parseInt(req.body.total),
-    weight: parseInt(req.body.weight),
+    weight: parseFloat(req.body.weight),
   };
 
   // get id

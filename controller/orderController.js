@@ -82,7 +82,6 @@ const getOrderById = async (req, res) => {
         id: element.id,
         location: element.location,
         date: element.date,
-        city: element.city,
         status: element.status,
         note: element.note,
         total_price: element.total_price,
@@ -122,7 +121,7 @@ const getOrderByStatus = async (req, res) => {
         date: element.date,
         city: element.city,
         status: element.status,
-        node: element.note,
+        note: element.note,
         total_price: element.total_price,
         total_weight: element.total_weight,
         buyer: {
