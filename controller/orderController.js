@@ -150,7 +150,8 @@ const getOrderByStatus = async (req, res) => {
 };
 
 const getOrderByDate = (req, res) => {
-  const dateStr = req.query.date;
+  var dateStr = req.query.date;
+  dateStr = dateStr.split(' ')[0];
   const components = dateStr.split("/");
 
   var arr = [];
