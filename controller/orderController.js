@@ -62,8 +62,10 @@ const deleteOrder = (req, res) => {
 
       //delete scrap order
       firebase.deleteScrapOrder(order);
-      sOrderInstance.scrapOrders = sOrderInstance.scrapOrders.filter(val=> val.id_order !== order.id);
-      
+      sOrderInstance.scrapOrders = sOrderInstance.scrapOrders.filter(
+        (val) => val.id_order !== order.id
+      );
+
       res.json({ msg: "successful" });
     } else res.json({ msg: "fail" });
   } catch (error) {
@@ -119,7 +121,6 @@ const getOrderByStatus = async (req, res) => {
         id: element.id,
         location: element.location,
         date: element.date,
-        city: element.city,
         status: element.status,
         note: element.note,
         total_price: element.total_price,
@@ -146,6 +147,45 @@ const getOrderByStatus = async (req, res) => {
   });
 
   res.json(arr);
+};
+
+const getOrderByDate = (req, res) => {
+  const dateStr = req.query.date;
+  const components = dateStr.split("/");
+
+  var arr = [];
+
+  if (components.length === 1) {
+    // year
+    const year = parseInt(components[0]);
+
+    orderInstance.orders.forEach((element) => {
+      const date = new Date(element.date);
+      if (year == date.getFullYear()) arr.push(element);
+    });
+    res.json(arr);
+  } else if (components.length === 2) {
+    // month,year
+    const month = parseInt(components[0]);
+    const year = parseInt(components[1]);
+    orderInstance.orders.forEach((element) => {
+      const date = new Date(element.date);
+      if (year == date.getFullYear() && month == date.getMonth() + 1)
+        arr.push(element);
+    });
+    res.json(arr);
+  } else if (components.length === 3) {
+    // day,month,year
+    const day = parseInt(components[1]);
+    const month = parseInt(components[0]);
+    const year = parseInt(components[2]);
+    orderInstance.orders.forEach((element) => {
+      const date = new Date(element.date);
+      if (year == date.getFullYear() && month == date.getMonth() + 1 && day == date.getDate())
+        arr.push(element);
+    });
+    res.json(arr);
+  }
 };
 
 const confirm = (req, res) => {
@@ -196,6 +236,7 @@ module.exports = {
   deleteOrder,
   getOrderById,
   getOrderByStatus,
+  getOrderByDate,
   confirm,
   complete,
 };

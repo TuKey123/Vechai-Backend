@@ -23,7 +23,7 @@ function hasUserName(user) {
   return check;
 }
 
-const getUser = (req, res) => {
+const getUser = (req, res,next) => {
   res.json(userInstance.users);
 };
 

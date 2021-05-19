@@ -1,7 +1,6 @@
 const express = require("express");
-var bodyParser = require("body-parser");
-const { json } = require("body-parser");
-const url = require('url');
+const session = require('./middleware/session');
+var cookieParser = require('cookie-parser');
 
 const userRouters = require('./routes/userRouters');
 const scrapRouters = require('./routes/scrapRouters');
@@ -17,6 +16,7 @@ app.listen(PORT,()=>console.log(`Server is listening at port ${PORT}...`));
 // middle ware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 // routers
 app.use(userRouters);

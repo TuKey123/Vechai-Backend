@@ -18,6 +18,9 @@ router.get("/orders/info",orderController.getOrderById);
 // get order by status
 router.get("/orders/status",orderController.getOrderByStatus);
 
+// get order by date
+router.get("/orders/bydate",orderController.getOrderByDate);
+
 // confirm status
 router.put("/orders/confirm",orderController.confirm);
 

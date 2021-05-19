@@ -28,8 +28,8 @@ class test {
 // var t = new test();
 // t.w = 2;
 
-var arr = ["1","2", "3"];
-// arr = arr.filter(val=>val<3)
+var arr = ["1", "2", "3"];
+const date = new Date("5/5/2021 13:28");
+date1 = new Date("2021/2/5 9:56");
 
-console.log(arr.pop("2"));
-
+console.log(date.getDate());
