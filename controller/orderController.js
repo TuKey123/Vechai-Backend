@@ -151,7 +151,6 @@ const getOrderByStatus = async (req, res) => {
 
 const getOrderByDate = (req, res) => {
   var dateStr = req.query.date;
-  dateStr = dateStr.split(' ')[0];
   const components = dateStr.split("/");
 
   var arr = [];
@@ -161,7 +160,7 @@ const getOrderByDate = (req, res) => {
     const year = parseInt(components[0]);
 
     orderInstance.orders.forEach((element) => {
-      const date = new Date(element.date);
+      const date = new Date(element.date.split(' ')[0]);
       if (year == date.getFullYear()) arr.push(element);
     });
     res.json(arr);
@@ -170,7 +169,7 @@ const getOrderByDate = (req, res) => {
     const month = parseInt(components[0]);
     const year = parseInt(components[1]);
     orderInstance.orders.forEach((element) => {
-      const date = new Date(element.date);
+      const date = new Date(element.date.split(' ')[0]);
       if (year == date.getFullYear() && month == date.getMonth() + 1)
         arr.push(element);
     });
@@ -181,7 +180,7 @@ const getOrderByDate = (req, res) => {
     const month = parseInt(components[0]);
     const year = parseInt(components[2]);
     orderInstance.orders.forEach((element) => {
-      const date = new Date(element.date);
+      const date = new Date(element.date.split(' ')[0]);
       if (year == date.getFullYear() && month == date.getMonth() + 1 && day == date.getDate())
         arr.push(element);
     });
