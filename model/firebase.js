@@ -122,11 +122,11 @@ function deleteScrapOrder(order) {
 function updateUserProfile(user) {
 
   try {
-    var table = db.ref('User');
+    var table = db.ref('user');
     table.on("child_added", (snap) => {
       if(snap.val().id===user.id) {
         key = snap.key;
-        db.ref("User/"+key).update();
+        db.ref("user/"+key).set(user);
       }
     })
   } catch {
