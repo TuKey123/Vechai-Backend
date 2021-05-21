@@ -90,7 +90,7 @@ const addUser = (req, res) => {
 };
 
 // LAI, update user profile, could be wrong
-const updateUser = (req, res) => {
+const updateProfile = (req, res) => {
   
   var user = {
     username: req.body.username,
@@ -114,4 +114,4 @@ const updateUser = (req, res) => {
 
 }
 
-module.exports = { getUser, checkUser, addUser, updateUser };
+module.exports = { getUser, checkUser, addUser, updateProfile };
