@@ -118,17 +118,12 @@ function deleteScrapOrder(order) {
 }
 
 
-// LAI, update user profile, could be wrong
+// LAI, update user profile
 function updateUserProfile(user) {
 
   try {
     var table = db.ref('User');
-    table.on("child_added", (snap) => {
-      if(snap.val().id===user.id) {
-        key = snap.key;
-        db.ref("User/"+key).update();
-      }
-    })
+    
   } catch {
     return false;
   }
@@ -138,4 +133,4 @@ function updateUserProfile(user) {
 
 
 
-module.exports = { db, getData, addData,deletaData ,updateOrder, getOrderDetail, deleteScrapOrder, updateUserProfile};
+module.exports = { db, getData, addData,deletaData ,updateOrder, getOrderDetail, deleteScrapOrder};

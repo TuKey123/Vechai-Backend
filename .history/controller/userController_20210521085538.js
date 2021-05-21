@@ -89,29 +89,6 @@ const addUser = (req, res) => {
   } else res.json({ msg: "fail" });
 };
 
-// LAI, update user profile, could be wrong
-const updateUser = (req, res) => {
-  
-  var user = {
-    username: req.body.username,
-    address: req.body.address,
-    fullname: req.body.fullname,
-    phone: req.body.phone,
-  }
-  user.id = getId();
+const u
 
-  if (hasUserName(user)) {
-    res.json({ msg: "username exists"});
-    return;
-  }
-
-  if (firebase.updateUserProfile(user)) {
-    res.json({ msg: "profile updated successfully"});
-  }
-  else {
-    res.json({ msg: "fail"});
-  }
-
-}
-
-module.exports = { getUser, checkUser, addUser, updateUser };
+module.exports = { getUser, checkUser, addUser };

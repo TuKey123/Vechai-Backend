@@ -117,25 +117,13 @@ function deleteScrapOrder(order) {
   return true;
 }
 
-
-// LAI, update user profile, could be wrong
 function updateUserProfile(user) {
 
-  try {
-    var table = db.ref('User');
-    table.on("child_added", (snap) => {
-      if(snap.val().id===user.id) {
-        key = snap.key;
-        db.ref("User/"+key).update();
-      }
-    })
-  } catch {
-    return false;
-  }
 
+  
   return true;
 }
 
 
 
-module.exports = { db, getData, addData,deletaData ,updateOrder, getOrderDetail, deleteScrapOrder, updateUserProfile};
+module.exports = { db, getData, addData,deletaData ,updateOrder, getOrderDetail, deleteScrapOrder};

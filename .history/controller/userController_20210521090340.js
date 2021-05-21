@@ -89,7 +89,6 @@ const addUser = (req, res) => {
   } else res.json({ msg: "fail" });
 };
 
-// LAI, update user profile, could be wrong
 const updateUser = (req, res) => {
   
   var user = {
@@ -98,6 +97,7 @@ const updateUser = (req, res) => {
     fullname: req.body.fullname,
     phone: req.body.phone,
   }
+
   user.id = getId();
 
   if (hasUserName(user)) {
@@ -106,12 +106,9 @@ const updateUser = (req, res) => {
   }
 
   if (firebase.updateUserProfile(user)) {
-    res.json({ msg: "profile updated successfully"});
-  }
-  else {
-    res.json({ msg: "fail"});
+    userIn
   }
 
 }
 
-module.exports = { getUser, checkUser, addUser, updateUser };
+module.exports = { getUser, checkUser, addUser };

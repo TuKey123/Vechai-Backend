@@ -138,4 +138,4 @@ function updateUserProfile(user) {
 
 
 
-module.exports = { db, getData, addData,deletaData ,updateOrder, getOrderDetail, deleteScrapOrder, updateUserProfile};
+module.exports = { db, getData, addData,deletaData ,updateOrder, getOrderDetail, deleteScrapOrder, update};

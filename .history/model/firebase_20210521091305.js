@@ -118,7 +118,7 @@ function deleteScrapOrder(order) {
 }
 
 
-// LAI, update user profile, could be wrong
+// LAI, update user profile
 function updateUserProfile(user) {
 
   try {
@@ -138,4 +138,4 @@ function updateUserProfile(user) {
 
 
 
-module.exports = { db, getData, addData,deletaData ,updateOrder, getOrderDetail, deleteScrapOrder, updateUserProfile};
+module.exports = { db, getData, addData,deletaData ,updateOrder, getOrderDetail, deleteScrapOrder};

@@ -89,7 +89,6 @@ const addUser = (req, res) => {
   } else res.json({ msg: "fail" });
 };
 
-// LAI, update user profile, could be wrong
 const updateUser = (req, res) => {
   
   var user = {
@@ -114,4 +113,4 @@ const updateUser = (req, res) => {
 
 }
 
-module.exports = { getUser, checkUser, addUser, updateUser };
+module.exports = { getUser, checkUser, addUser, up };
