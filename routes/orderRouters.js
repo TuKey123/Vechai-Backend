@@ -21,6 +21,9 @@ router.get("/orders/status",orderController.getOrderByStatus);
 // get order by date
 router.get("/orders/bydate",orderController.getOrderByDate);
 
+// get order by 7 days laytest
+router.get("/orders/7dayslatest",orderController.getOrderBy7DaysLatest);
+
 // confirm status
 router.put("/orders/confirm",orderController.confirm);
 

@@ -29,7 +29,8 @@ class test {
 // t.w = 2;
 
 var arr = ["1", "2", "3"];
-const date = new Date("5/5/2021 13:28");
+const date = new Date("5/22/2021 13:28");
 date1 = new Date("2021/2/5 9:56");
 
-console.log(date.getDate());
+console.log(new Date() - date);
+

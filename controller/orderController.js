@@ -160,7 +160,7 @@ const getOrderByDate = (req, res) => {
     const year = parseInt(components[0]);
 
     orderInstance.orders.forEach((element) => {
-      const date = new Date(element.date.split(' ')[0]);
+      const date = new Date(element.date.split(" ")[0]);
       if (year == date.getFullYear()) arr.push(element);
     });
     res.json(arr);
@@ -169,7 +169,7 @@ const getOrderByDate = (req, res) => {
     const month = parseInt(components[0]);
     const year = parseInt(components[1]);
     orderInstance.orders.forEach((element) => {
-      const date = new Date(element.date.split(' ')[0]);
+      const date = new Date(element.date.split(" ")[0]);
       if (year == date.getFullYear() && month == date.getMonth() + 1)
         arr.push(element);
     });
@@ -180,12 +180,36 @@ const getOrderByDate = (req, res) => {
     const month = parseInt(components[0]);
     const year = parseInt(components[2]);
     orderInstance.orders.forEach((element) => {
-      const date = new Date(element.date.split(' ')[0]);
-      if (year == date.getFullYear() && month == date.getMonth() + 1 && day == date.getDate())
+      const date = new Date(element.date.split(" ")[0]);
+      if (
+        year == date.getFullYear() &&
+        month == date.getMonth() + 1 &&
+        day == date.getDate()
+      )
         arr.push(element);
     });
     res.json(arr);
   }
+};
+
+const getOrderBy7DaysLatest = (req, res) => {
+  var arr = [];
+  orderInstance.orders.forEach((element) => {
+    const day = new Date();
+    const orderDay = new Date(element.date.split(" ")[0]);
+    if (day.getMonth() === orderDay.getMonth() && day.getFullYear() === orderDay.getFullYear()) {
+      const subtract = day.getDate() - orderDay.getDate();
+      if (subtract <= 7 && subtract >= 0) 
+        arr.push(element);    
+    }
+  });
+  // sort
+  arr.sort((a,b)=>{
+    var date1 = new Date(a.date.split(" ")[0]);
+    var date2 = new Date(b.date.split(" ")[0]);
+    return date2-date1;
+  });
+  res.json(arr);
 };
 
 const confirm = (req, res) => {
@@ -237,6 +261,7 @@ module.exports = {
   getOrderById,
   getOrderByStatus,
   getOrderByDate,
+  getOrderBy7DaysLatest,
   confirm,
   complete,
 };
