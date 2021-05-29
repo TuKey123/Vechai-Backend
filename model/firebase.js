@@ -120,19 +120,29 @@ function deleteScrapOrder(order) {
 
 // LAI, update user profile, could be wrong
 function updateUserProfile(user) {
+  /**
+   * DEFINE RETURN VALUE
+   * true : profile_updated_successfully
+   * false : failed
+   */
+  var results;
   try {
-    var table = db.ref('user');
-    table.on("child_added", (snap) => {
-      if (snap.val().id === user.id) {
-        key = snap.key;
-        db.ref("user/" + key).set(user);
+    db.ref('User').on('child_added', (snap) => {
+      if (snap.val().id == user.id) {
+        db.ref('User/' + snap.key).update({
+          username: user.username,
+          address: user.address,
+          fullname: user.fullname,
+          phone: user.phone
+        });
+        results = true;
       }
     })
-  } catch {
-    return false;
+  } catch (error) {
+    results = error;
+  } finally {
+    return results;
   }
-
-  return true;
 }
 
 // LAI, update user password, could be wrong

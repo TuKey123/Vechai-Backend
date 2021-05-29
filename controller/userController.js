@@ -91,56 +91,93 @@ const addUser = (req, res) => {
 
 // LAI, update user profile, could be wrong
 const updateProfile = (req, res) => {
+  // CHECK IF REQ.BODY ISEMPTY OR MISSING PROP
+  if (JSON.stringify(req.body) === JSON.stringify({}) ||
+      !req.hasOwnProperty('id') ||
+      !req.hasOwnProperty('username') ||
+      !req.hasOwnProperty('address') ||
+      !req.hasOwnProperty('fullname') ||
+      !req.hasOwnProperty('phone')) {
+        res.json({ msg : 'invalid_request' });
+        return;
+  }
 
   var user = {
+    id: req.body.id,
     username: req.body.username,
     address: req.body.address,
     fullname: req.body.fullname,
     phone: req.body.phone,
   }
-  user.id = getId();
 
   if (hasUserName(user)) {
-    res.json({ msg: "username exists" });
+    res.json({ msg: 'username_exists' });
     return;
   }
 
-  if (firebase.updateUserProfile(user)) {
-    res.json({ msg: "profile updated successfully" });
-  }
-  else {
-    res.json({ msg: "fail" });
-  }
+  switch (firebase.updateUserProfile(user)) {
+    case true:
+      res.json({ msg: 'profile_updated_successfully' });
 
+      // LOCAL UPDATE (CACHE): user instance
+      var needUpdating = userInstance.users.findIndex(e => e.id == req.body.id);
+      if (needUpdating != -1) {
+        userInstance.users[needUpdating]['username'] = req.body.username;
+        userInstance.users[needUpdating]['address'] = req.body.address;
+        userInstance.users[needUpdating]['fullname'] = req.body.fullname;
+        userInstance.users[needUpdating]['phone'] = req.body.phone;
+      }
+      break;
+    case false:
+      res.json({ msg: 'failed' });
+      break;
+    default:
+      res.json({ msg: 'unexpected_value' });
+  }
 }
 
 // LAI, update user password, could be wrong
 const updatePassword = (req, res) => {
+  // CHECK IF REQ.BODY ISEMPTY OR MISSING PROP
+  if (JSON.stringify(req.body) === JSON.stringify({}) ||
+      !req.hasOwnProperty('id') ||
+      !req.hasOwnProperty('currPass') ||
+      !req.hasOwnProperty('newPass')) {
+        res.json({ msg : 'invalid_request' });
+        return;
+  }
+
   switch (firebase.updatePassword(parseInt(req.body.id),
-                                  req.body.currPass,
-                                  req.body.newPass)) {
+                                           req.body.currPass,
+                                           req.body.newPass)) {
     case -1:
-      res.json({ msg : 'wrong_password' });
+      res.json({ msg: 'wrong_password' });
       break;
     case -2:
-      res.json({ msg : 'newPass_equals_currPass' });
+      res.json({ msg: 'newPass_equals_currPass' });
       break;
     case true:
-      res.json({ msg : 'password_updated_successfully' });
+      res.json({ msg: 'password_updated_successfully' });
 
       // LOCAL UPDATE (CACHE): user instance
       var needUpdating = userInstance.users.findIndex(e => e.id == req.body.id);
       if (needUpdating != -1) {
         userInstance.users[needUpdating]['password'] = req.body.newPass;
       }
-      
+
       break;
     case false:
-      res.json({ msg : 'failed' });
+      res.json({ msg: 'failed' });
       break;
     default:
-      res.json({ msg : 'unexpected_value'});
+      res.json({ msg: 'unexpected_value' });
   }
 }
 
-module.exports = { getUser, checkUser, addUser, updateProfile, updatePassword };
+module.exports = {
+  getUser,
+  checkUser,
+  addUser,
+  updateProfile,
+  updatePassword
+};
