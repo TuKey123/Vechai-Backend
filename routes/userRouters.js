@@ -14,4 +14,7 @@ router.post("/addUser",userController.addUser);
 // update profile
 router.post("/updateProfile", userController.updateProfile);
 
+// update password
+router.post("/updatePassword", userController.updatePassword);
+
 module.exports = router;

@@ -1,7 +1,7 @@
 const firebase = require("../model/firebase");
 const User = require('../model/user');
 
-var userInstance  = new User();
+var userInstance = new User();
 
 function getId() {
   var id = 0;
@@ -23,7 +23,7 @@ function hasUserName(user) {
   return check;
 }
 
-const getUser = (req, res,next) => {
+const getUser = (req, res, next) => {
   res.json(userInstance.users);
 };
 
@@ -91,7 +91,7 @@ const addUser = (req, res) => {
 
 // LAI, update user profile, could be wrong
 const updateProfile = (req, res) => {
-  
+
   var user = {
     username: req.body.username,
     address: req.body.address,
@@ -101,17 +101,46 @@ const updateProfile = (req, res) => {
   user.id = getId();
 
   if (hasUserName(user)) {
-    res.json({ msg: "username exists"});
+    res.json({ msg: "username exists" });
     return;
   }
 
   if (firebase.updateUserProfile(user)) {
-    res.json({ msg: "profile updated successfully"});
+    res.json({ msg: "profile updated successfully" });
   }
   else {
-    res.json({ msg: "fail"});
+    res.json({ msg: "fail" });
   }
 
 }
 
-module.exports = { getUser, checkUser, addUser, updateProfile };
+// LAI, update user password, could be wrong
+const updatePassword = (req, res) => {
+  switch (firebase.updatePassword(parseInt(req.body.id),
+                                  req.body.currPass,
+                                  req.body.newPass)) {
+    case -1:
+      res.json({ msg : 'wrong_password' });
+      break;
+    case -2:
+      res.json({ msg : 'newPass_equals_currPass' });
+      break;
+    case true:
+      res.json({ msg : 'password_updated_successfully' });
+
+      // LOCAL UPDATE (CACHE): user instance
+      var needUpdating = userInstance.users.findIndex(e => e.id == req.body.id);
+      if (needUpdating != -1) {
+        userInstance.users[needUpdating]['password'] = req.body.newPass;
+      }
+      
+      break;
+    case false:
+      res.json({ msg : 'failed' });
+      break;
+    default:
+      res.json({ msg : 'unexpected_value'});
+  }
+}
+
+module.exports = { getUser, checkUser, addUser, updateProfile, updatePassword };

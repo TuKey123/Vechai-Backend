@@ -42,7 +42,7 @@ async function getOrderDetail() {
       var orderRow = snap.val();
       orderRow.total_weight = 0;
       orderRow.total_price = 0;
-      scrapOrder.orderByChild('id_order').equalTo(orderRow.id).once('child_added',snap=>{
+      scrapOrder.orderByChild('id_order').equalTo(orderRow.id).once('child_added', snap => {
         var sOrderRow = snap.val();
         orderRow.total_weight += sOrderRow.weight;
         orderRow.total_price += sOrderRow.total;
@@ -67,15 +67,15 @@ function addData(name, data) {
 }
 
 // Update
-function updateOrder(order){
+function updateOrder(order) {
   try {
     var table = db.ref('Order');
     table.on("child_added", (snap) => {
-      if(snap.val().id===order.id){
+      if (snap.val().id === order.id) {
         key = snap.key;
       }
     });
-    db.ref('Order/'+key).set(order);
+    db.ref('Order/' + key).set(order);
   } catch {
     return false;
   }
@@ -89,11 +89,11 @@ function deletaData(name, data) {
     var table = db.ref(name);
     var key;
     table.on("child_added", (snap) => {
-      if(snap.val().id===data.id){
+      if (snap.val().id === data.id) {
         key = snap.key;
       }
     });
-    db.ref(name+'/'+key).remove();
+    db.ref(name + '/' + key).remove();
   } catch {
     return false;
   }
@@ -105,9 +105,9 @@ function deleteScrapOrder(order) {
     var table = db.ref('Scrap_Order');
     var key;
     table.on("child_added", (snap) => {
-      if(snap.val().id_order===order.id){
+      if (snap.val().id_order === order.id) {
         key = snap.key;
-        db.ref('Scrap_Order/'+key).remove();
+        db.ref('Scrap_Order/' + key).remove();
       }
     });
 
@@ -120,13 +120,12 @@ function deleteScrapOrder(order) {
 
 // LAI, update user profile, could be wrong
 function updateUserProfile(user) {
-
   try {
     var table = db.ref('user');
     table.on("child_added", (snap) => {
-      if(snap.val().id===user.id) {
+      if (snap.val().id === user.id) {
         key = snap.key;
-        db.ref("user/"+key).set(user);
+        db.ref("user/" + key).set(user);
       }
     })
   } catch {
@@ -136,6 +135,48 @@ function updateUserProfile(user) {
   return true;
 }
 
+// LAI, update user password, could be wrong
+function updatePassword(_userID, _currPassword, _newPassword) {
+  /**
+   * DEFINE RETURN VALUES
+   * -1 : wrong_password
+   * -2 : newPass_equals_currPass
+   * true : password_updated_successfully
+   * false : failed
+   */
+  var result;
+  try {
+    db.ref('User').on('child_added', (snap) => {
+      if (snap.val().id == _userID) {
+        if (snap.val().password != _currPassword) {
+          result = -1;
+        }
+        else if (snap.val().password == _newPassword) {
+          result = -2;
+        }
+        else {
+          db.ref('User/' + snap.key).update({ password: _newPassword });
+          result = true;
+        }
+      }
+    })
+  } catch (error) {
+    result = false;
+  } finally {
+    return result;
+  }
+}
 
 
-module.exports = { db, getData, addData,deletaData ,updateOrder, getOrderDetail, deleteScrapOrder, updateUserProfile};
+
+module.exports = {
+  db,
+  getData,
+  addData,
+  deletaData,
+  updateOrder,
+  getOrderDetail,
+  deleteScrapOrder,
+  updateUserProfile,
+  updatePassword
+};
