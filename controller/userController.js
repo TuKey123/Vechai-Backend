@@ -110,7 +110,7 @@ const updateProfile = (req, res) => {
     phone: req.body.phone,
   }
 
-  if (hasUserName(user)) {
+  if (-1 != userInstance.users.findIndex(e => e.id != req.body.id && e.username == req.body.username)) {
     res.json({ msg: 'username_exists' });
     return;
   }
