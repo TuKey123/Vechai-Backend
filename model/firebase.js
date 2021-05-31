@@ -128,7 +128,7 @@ function updateUserProfile(user) {
   var results;
   try {
     db.ref('User').on('child_added', (snap) => {
-      if (snap.val().id == user.id) {
+      if (snap.val().id === user.id) {
         db.ref('User/' + snap.key).update({
           username: user.username,
           address: user.address,
@@ -157,7 +157,7 @@ function updatePassword(_userID, _currPassword, _newPassword) {
   var result;
   try {
     db.ref('User').on('child_added', (snap) => {
-      if (snap.val().id == _userID) {
+      if (snap.val().id === _userID) {
         if (snap.val().password != _currPassword) {
           result = -1;
         }
@@ -177,7 +177,32 @@ function updatePassword(_userID, _currPassword, _newPassword) {
   }
 }
 
+function randPassword() {
+  return Math.random().toString(36).slice(-8);
+}
 
+function resetPassword(_userID) {
+  /**
+   * DEFINE RETURN VALUES
+   * ... : new pass word
+   * false : failed
+   */
+  var result;
+  try {
+    db.ref('User').on('child_added', (snap) => {
+      if (snap.val().id === _userID) {
+        result = randPassword();
+        db.ref('User/' + snap.key).update({
+          password : result
+        });
+      }
+    })
+  } catch (error) {
+    result = false;
+  } finally {
+    return result;
+  }
+}
 
 module.exports = {
   db,
@@ -188,5 +213,6 @@ module.exports = {
   getOrderDetail,
   deleteScrapOrder,
   updateUserProfile,
-  updatePassword
+  updatePassword,
+  resetPassword
 };

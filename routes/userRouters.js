@@ -17,4 +17,7 @@ router.post("/updateProfile", userController.updateProfile);
 // update password
 router.post("/updatePassword", userController.updatePassword);
 
+// reset password
+router.post("/resetPassword", userController.resetPassword);
+
 module.exports = router;

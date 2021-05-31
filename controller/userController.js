@@ -158,7 +158,6 @@ const updatePassword = (req, res) => {
       break;
     case true:
       res.json({ msg: 'password_updated_successfully' });
-
       // LOCAL UPDATE (CACHE): user instance
       var needUpdating = userInstance.users.findIndex(e => e.id == req.body.id);
       if (needUpdating != -1) {
@@ -174,10 +173,34 @@ const updatePassword = (req, res) => {
   }
 }
 
+const resetPassword = (req, res) => {
+  // validate the request first
+  if (JSON.stringify(req.body) === JSON.stringify({}) ||
+      !req.body.hasOwnProperty('id')) {
+        res.json({ msg : 'invalid_request'});
+        return;
+  }
+
+  var result = firebase.resetPassword(req.body.id);
+  if (!result) {
+    res.json({ msg : 'failed' });
+  }
+  else {
+    res.json({ msg : result });
+    // LOCAL UPDATE (CACHE): user instance
+    var needUpdating = userInstance.users.findIndex(e => e.id == req.body.id);
+    if (needUpdating != -1) {
+      userInstance.users[needUpdating]['password'] = result;
+    }
+  }
+
+}
+
 module.exports = {
   getUser,
   checkUser,
   addUser,
   updateProfile,
-  updatePassword
+  updatePassword,
+  resetPassword
 };
